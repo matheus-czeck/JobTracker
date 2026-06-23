@@ -1,0 +1,25 @@
+<div class="detail-container" *ngIf="job">
+    <div class="info-grid">
+        <div class="info-item">
+            <label>Empresa</label>
+            <span>{{ job.company }}</span>
+        </div>
+        <div class="info-item">
+            <label>Cargo</label>
+            <span>{{ job.title }}</span>
+        </div>
+        </div>
+
+    <h4 class="timeline-header">Linha do Tempo</h4>
+    <div class="timeline-container">
+        <div class="event-box" *ngFor="let status of statusOrder" 
+             [class.active]="isStatusReached(status)">
+            
+            <div class="event-status">{{ status }}</div>
+            
+            <small class="event-date" *ngIf="getStatusDate(status)">
+                {{ getStatusDate(status) | date:'dd/MM/yyyy HH:mm' }}
+            </small>
+        </div>
+    </div>
+</div>

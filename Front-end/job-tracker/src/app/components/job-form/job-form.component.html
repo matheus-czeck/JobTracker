@@ -1,0 +1,21 @@
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="form-container">
+    
+    <p-floatLabel>
+        <input pInputText id="company" formControlName="company" class="w-full" />
+        <label for="company">Empresa</label>
+    </p-floatLabel>
+
+    <p-floatLabel>
+        <input pInputText id="title" formControlName="title" class="w-full" />
+        <label for="title">Título da Vaga</label>
+    </p-floatLabel>
+
+    <p-floatLabel>
+        <input pInputText id="url" formControlName="url" class="w-full" />
+        <label for="url">Link da Vaga</label>
+    </p-floatLabel>
+
+    <div class="button-container">
+        <button pButton label="Salvar Candidatura" type="submit" [disabled]="jobForm.invalid"></button>
+    </div>
+</form>

@@ -1,0 +1,21 @@
+.list-container {
+    padding: 2rem;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+/* Exemplo de estilização para o status */
+.status-applied { background-color: #e3f2fd; color: #1e88e5; }

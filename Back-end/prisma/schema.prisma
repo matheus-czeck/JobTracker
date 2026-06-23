@@ -1,10 +1,48 @@
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
 }
+
+enum JobStatus {
+    APLICADO 
+    TRIAGEM
+    ENTREVISTA
+    TESTE_TECNICO
+    PROPOSTA
+    PROPOSTA_ACEITA
+    REJEITADO
+    DESISTENCIA
+  }
+
+  model JobOpportunity {
+    id String @id @default(uuid())
+    title String 
+    company String
+    url String 
+    location String?
+    salaryExpect String?
+    description String?
+    currentStatus JobStatus @default(APLICADO)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    history JobHistory[]
+    @@map("job_opportunities") 
+  }
+
+  model JobHistory{
+    id String @id @default(uuid())
+    jobOpportunityId String
+    oldStatus JobStatus?
+    newStatus JobStatus 
+    notes String? 
+    changedAt DateTime @default(now())
+
+    jobOpportunity JobOpportunity @relation(fields: [jobOpportunityId], references:[id], onDelete: Cascade)
+
+    @@map("job_histories")
+    }
