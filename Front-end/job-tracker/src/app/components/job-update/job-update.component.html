@@ -1,0 +1,30 @@
+<div class="update-form">
+    <div class="field-group">
+        <label for="status">Novo Status</label>
+        <p-dropdown 
+            id="status"
+            [options]="statusOrder" 
+            [(ngModel)]="newStatus" 
+            placeholder="Selecione o próximo passo">
+        </p-dropdown>
+    </div>
+
+    <div class="field-group">
+        <label for="notes">Observações / Notas</label>
+        <textarea 
+            id="notes"
+            pInputTextarea 
+            [(ngModel)]="newNotes" 
+            rows="4" 
+            placeholder="Escreva detalhes sobre esta mudança (ex: feedback, data do retorno)...">
+        </textarea>
+    </div>
+
+    <button 
+        pButton 
+        label="Confirmar Alteração" 
+        icon="pi pi-check" 
+        class="submit-btn"
+        (click)="updateJobStatus()">
+    </button>
+</div>

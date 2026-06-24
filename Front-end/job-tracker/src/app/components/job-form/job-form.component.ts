@@ -36,6 +36,9 @@ export class JobFormComponent {
       title: ['', Validators.required],
       company: ['', Validators.required],
       url: ['', Validators.required],
+      location: [''],
+      salaryExpect: [''],
+      description: ['']
     });
   }
 

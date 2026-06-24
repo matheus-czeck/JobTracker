@@ -9,6 +9,10 @@ export interface Job {
   url: string;
   currentStatus: string;
   updateAt: Date;
+
+  location?: string;
+  salaryExpect?: string;
+  description?: string;
 }
 
 export interface JobHistory {

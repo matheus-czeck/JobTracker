@@ -1,0 +1,41 @@
+.update-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0.5rem 0;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #000000;
+    letter-spacing: 0.05em;
+}
+
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-inputtextarea {
+    width: 100% !important;
+}
+
+:host ::ng-deep .p-inputtextarea {
+    resize: vertical;
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: #2563eb !important;
+    border: none !important;
+    font-weight: 700;
+    padding: 0.75rem !important;
+}
+
+.submit-btn:hover {
+    background-color: #1d4ed8 !important;
+}

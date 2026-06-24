@@ -1,16 +1,24 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import { JobService, JobDetail } from '../../services/job.service';
 import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
+import { PipesReplaceUnderscorePipe } from '../../pipes.replace-underscore.pipe';
 
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [TimelineModule, CommonModule],
+  imports: [TimelineModule, CommonModule, PipesReplaceUnderscorePipe],
   templateUrl: './job-detail.component.html',
   styleUrl: './job-detail.component.css',
 })
-export class JobDetailComponent implements OnChanges {
+export class JobDetailComponent implements OnInit, OnChanges {
   @Input() jobId: string | null = null;
   job: JobDetail | null = null;
 
@@ -27,8 +35,12 @@ export class JobDetailComponent implements OnChanges {
 
   constructor(private jobService: JobService) {}
 
-  ngOnChanges(): void {
-    if (this.jobId) {
+  ngOnInit(): void {
+    this.loadJobDetails();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['jobId'] && !changes['jobId'].firstChange) {
       this.loadJobDetails();
     }
   }
@@ -48,8 +60,14 @@ export class JobDetailComponent implements OnChanges {
   }
 
   loadJobDetails() {
-    this.jobService.getJobById(this.jobId!).subscribe((data) => {
-      this.job = data;
+    if (!this.jobId) return;
+
+    this.jobService.getJobById(this.jobId).subscribe({
+      next: (data) => {
+        this.job = data;
+      },
+      error: (err) =>
+        console.error('Erro ao carregar os detalhes da vaga', err),
     });
   }
 }

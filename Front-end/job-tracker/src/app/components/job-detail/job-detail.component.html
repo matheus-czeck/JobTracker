@@ -1,25 +1,86 @@
-<div class="detail-container" *ngIf="job">
-    <div class="info-grid">
-        <div class="info-item">
-            <label>Empresa</label>
-            <span>{{ job.company }}</span>
-        </div>
-        <div class="info-item">
-            <label>Cargo</label>
-            <span>{{ job.title }}</span>
-        </div>
-        </div>
+<div class="detail-wrapper" *ngIf="job">
+  <section class="info-section">
+    <div class="header-titles">
+      <div class="header-group">
+        <span class="label">Empresa</span>
+        <span class="company-name">{{ job.company }}</span>
+      </div>
 
-    <h4 class="timeline-header">Linha do Tempo</h4>
-    <div class="timeline-container">
-        <div class="event-box" *ngFor="let status of statusOrder" 
-             [class.active]="isStatusReached(status)">
-            
-            <div class="event-status">{{ status }}</div>
-            
-            <small class="event-date" *ngIf="getStatusDate(status)">
-                {{ getStatusDate(status) | date:'dd/MM/yyyy HH:mm' }}
-            </small>
-        </div>
+      <div class="header-group">
+        <span class="label">Cargo</span>
+        <h3 class="job-title">{{ job.title }}</h3>
+      </div>
     </div>
+
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="label">Localização</span>
+        <span class="value">
+          <i class="pi pi-map-marker icon-small"></i>
+          {{ job.location || "Não informada" }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Expectativa Salarial</span>
+        <span class="value">
+          <i class="pi pi-money-bill icon-small"></i>
+          {{ job.salaryExpect }}
+          <span *ngIf="!job.salaryExpect" class="value empty-value"
+            >A combinar</span
+          >
+        </span>
+      </div>
+
+      <div class="detail-item full-width">
+        <span class="label">Link da Vaga</span>
+        <a
+          *ngIf="job.url"
+          [href]="job.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link-value"
+        >
+          Acessar plataforma da vaga
+          <i
+            class="pi pi-external-link"
+            style="font-size: 0.75rem; margin-left: 0.25rem"
+          ></i>
+        </a>
+        <span *ngIf="!job.url" class="value empty-value"
+          >Sem link cadastrado</span
+        >
+      </div>
+
+      <div class="detail-item full-width" *ngIf="job.description">
+        <span class="label">Descrição / Notas Iniciais</span>
+        <p class="description-value">{{ job.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="timeline-section">
+    <h4 class="section-title">Linha do Tempo</h4>
+
+    <p-timeline [value]="job.history || job.currentStatus">
+      <ng-template pTemplate="content" let-event>
+        <div class="timeline-content">
+          <span class="event-status">{{
+            event.status | replaceUnderscore
+          }}</span>
+          <small class="event-date">{{
+            event.date | date: "dd/MM/yyyy HH:mm"
+          }}</small>
+          <p class="event-notes" *ngIf="event.notes">{{ event.notes }}</p>
+        </div>
+      </ng-template>
+    </p-timeline>
+  </section>
+</div>
+
+<div *ngIf="!job" class="loading-state">
+  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+  <p>Carregando detalhes...</p>
 </div>

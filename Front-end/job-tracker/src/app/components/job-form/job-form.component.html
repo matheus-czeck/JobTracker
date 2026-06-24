@@ -1,21 +1,35 @@
 <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="form-container">
-    
-    <p-floatLabel>
-        <input pInputText id="company" formControlName="company" class="w-full" />
-        <label for="company">Empresa</label>
-    </p-floatLabel>
+  
+  <div class="field">
+    <label>Empresa</label>
+    <input pInputText formControlName="company" placeholder="Ex: Google" />
+  </div>
 
-    <p-floatLabel>
-        <input pInputText id="title" formControlName="title" class="w-full" />
-        <label for="title">Título da Vaga</label>
-    </p-floatLabel>
+  <div class="field">
+    <label>Cargo</label>
+    <input pInputText formControlName="title" placeholder="Ex: Desenvolvedor Front-end" />
+  </div>
 
-    <p-floatLabel>
-        <input pInputText id="url" formControlName="url" class="w-full" />
-        <label for="url">Link da Vaga</label>
-    </p-floatLabel>
-
-    <div class="button-container">
-        <button pButton label="Salvar Candidatura" type="submit" [disabled]="jobForm.invalid"></button>
+  <div class="form-row">
+    <div class="field">
+      <label>Localização</label>
+      <input pInputText formControlName="location" placeholder="Ex: Remoto / Híbrido" />
     </div>
+    <div class="field">
+      <label>Salário Pretendido</label>
+      <input pInputText formControlName="salaryExpect" placeholder="Ex: R$ 10.000" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Link da Vaga</label>
+    <input pInputText formControlName="url" placeholder="https://" />
+  </div>
+
+  <div class="field">
+    <label>Descrição / Notas</label>
+    <textarea pInputTextarea formControlName="description" rows="3"></textarea>
+  </div>
+
+  <button pButton label="Salvar Vaga" type="submit" [disabled]="!jobForm.valid"></button>
 </form>

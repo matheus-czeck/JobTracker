@@ -9,6 +9,10 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService } from 'primeng/api';
 import { JobDetailComponent } from '../job-detail/job-detail.component';
+import { JobUpdateComponent } from '../job-update/job-update.component';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { PipesReplaceUnderscorePipe } from '../../pipes.replace-underscore.pipe';
 
 @Component({
   selector: 'app-job-list',
@@ -21,15 +25,37 @@ import { JobDetailComponent } from '../job-detail/job-detail.component';
     JobFormComponent,
     ConfirmDialogModule,
     JobDetailComponent,
+    JobUpdateComponent,
+    FormsModule,
+    DropdownModule,
+    PipesReplaceUnderscorePipe,
   ],
   templateUrl: './job-list.component.html',
   styleUrl: './job-list.component.css',
 })
 export class JobListComponent implements OnInit {
   jobs: Job[] = [];
+  filteredJobs: any[] = [];
+
+  searchTerm: string = '';
+  selectedStatus: string | null = null;
+
   displayDialog: boolean = false;
   displayDetailDialog: boolean = false;
+  displayUpdateDialog: boolean = false;
   selectedJobId: string | null = null;
+
+  readonly statusOrder = [
+    { label: 'Todos os Status', value: null },
+    { label: 'APLICADO', value: 'APLICADO' },
+    { label: 'TRIAGEM', value: 'TRIAGEM' },
+    { label: 'ENTREVISTA', value: 'ENTREVISTA' },
+    { label: 'TESTE TECNICO', value: 'TESTE_TECNICO' },
+    { label: 'PROPOSTA', value: 'PROPOSTA' },
+    { label: 'PROPOSTA ACEITA', value: 'PROPOSTA_ACEITA' },
+    { label: 'REJEITADO', value: 'REJEITADO' },
+    { label: 'DESISTENCIA', value: 'DESISTENCIA' },
+  ];
 
   constructor(
     private jobService: JobService,
@@ -48,14 +74,56 @@ export class JobListComponent implements OnInit {
 
   loadJobs(): void {
     this.jobService.getJobs().subscribe({
-      next: (data) => (this.jobs = data),
+      next: (data) => {
+        this.jobs = data;
+        this.applyFilters();
+      },
       error: (err) => console.log('Erro ao carregar vagas', err),
     });
+  }
+
+  applyFilters(): void {
+    this.filteredJobs = this.jobs.filter((job) => {
+      const matchesText =
+        !this.searchTerm ||
+        job.company
+          .toLocaleLowerCase()
+          .includes(this.searchTerm.toLocaleLowerCase()) ||
+        job.title
+          .toLocaleLowerCase()
+          .includes(this.searchTerm.toLocaleLowerCase());
+
+      const matchesStatus =
+        !this.selectedStatus || job.currentStatus === this.selectedStatus;
+
+      return matchesText && matchesStatus;
+    });
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedStatus = null;
+    this.applyFilters();
   }
 
   openDetails(id: string): void {
     this.selectedJobId = id;
     this.displayDetailDialog = true;
+  }
+  openUpdate(id: string): void {
+    this.selectedJobId = id;
+    this.displayUpdateDialog = true;
+  }
+
+  onUpdateSuccess(): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Status alterado com sucesso!',
+    });
+    this.displayUpdateDialog = false;
+    this.selectedJobId = null;
+    this.loadJobs();
   }
   delete(id: string): void {
     this.confirmationService.confirm({

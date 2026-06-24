@@ -1,17 +1,27 @@
-
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 1.9rem;
-    padding: 1.5rem;
+    gap: 1rem;
 }
 
-.w-full {
-    width: 100%;
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
-.button-container {
-    margin-top: 1.5rem;
+.field {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.field input, .field textarea {
+    width: 100%;
 }
