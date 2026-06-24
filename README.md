@@ -48,20 +48,26 @@ jobtracker/
 ├── Back-end/
 │   ├── src/
 │   │   ├── controllers/     # Controladores das rotas
-│   │   ├── services/        # Regras de negócio
-│   │   ├── repositories/    # Acesso ao banco via Prisma
-│   │   └── routes/          # Definição das rotas da API
+│   │   ├── repositories     # Acesso a db via Prisma
+│   │   ├── routes/          # Definição das rotas da API
+│   │   ├── services/        # Regras de negocio
+│   │   ├── index.ts         # Inicializacao app express
+│   │   └── server.ts        # Inicializacao servidor e conexao db
+│   │
 │   ├── prisma/
+│   │   ├── migrations/      # Controle banco de dados
+│   │   ├──seed/             # Popula db com dados ficticios
 │   │   └── schema.prisma    # Schema do banco de dados
 │   └── package.json
 │
-└── Front-end/
-    ├── src/
-    │   ├── app/
-    │   │   ├── pages/       # Páginas da aplicação
-    │   │   ├── components/  # Componentes reutilizáveis
-    │   │   └── services/    # Serviços e chamadas à API
-    └── package.json
+└── Front-end/job-tracker
+                ├── src/
+                │   ├── app/
+                │   │   ├── components/  # Componentes             
+                │   │   └── services/    # Serviços  
+                │   ├── routes/          # rotas    
+                │
+                └── package.json
 ```
 
 ---
@@ -70,8 +76,8 @@ jobtracker/
 
 ### Pré-requisitos
 
-- Node.js 20+
-- PostgreSQL 16+
+- Node.js 22+
+- PostgreSQL 17+
 - npm ou yarn
 
 ### Configuração
@@ -93,8 +99,8 @@ npm install
 # Configure as variáveis de ambiente
 cp .env.example .env
 
-# Edite o .env com suas credenciais do PostgreSQL
-# - *Em desenvolvimento*
+# Edite o .env com suas credenciais do DB
+DATABASE_URL= "sua_conexao"
 
 # Rode as migrations
 npx prisma migrate dev
