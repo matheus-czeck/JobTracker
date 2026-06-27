@@ -1,9 +1,14 @@
-import { type Request, type Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import JobService from "../services/job.service.js";
 import { JobStatus } from "@prisma/client";
+import type { UpdateJobStatusInput } from "../dtos/job.dto.js";
 
 export class JobController {
-  static async create(req: Request, res: Response): Promise<void> {
+  static async create(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const { title, company, url, location, salaryExpect, description } =
         req.body;
@@ -24,40 +29,45 @@ export class JobController {
       });
       res.status(201).json(newJob);
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: "Erro interno do servidor ao salvar a vaga." });
+      next(error);
     }
   }
 
-  static async list(req: Request, res: Response): Promise<void> {
+  static async list(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const jobs = await JobService.getAllJobs();
       res.status(200).json(jobs);
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar vagas." });
+      next(error);
     }
   }
 
-  static async show(req: Request, res: Response): Promise<void> {
+  static async show(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id as string;
       const job = await JobService.getJobId(id);
-
-      if (!job) {
-        res.status(404).json({ error: "Vaga nao encontrada." });
-        return;
-      }
       res.status(200).json(job);
     } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar detalhes da vaga" });
+      next(error);
     }
   }
 
-  static async changeStatus(req: Request, res: Response): Promise<void> {
+  static async changeStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id as string;
-      const { status, notes } = req.body;
+      const { status, notes } = req.body as UpdateJobStatusInput;
 
       if (!status || !Object.values(JobStatus).includes(status as JobStatus)) {
         res.status(400).json({ error: "Status informado invalido." });
@@ -71,23 +81,34 @@ export class JobController {
       );
       res.status(200).json(updatedJob);
     } catch (error) {
-      res
-        .status(500)
-        .json({ error: "Erro ao atualizar status da candidatura" });
+      next(error);
     }
   }
 
-  static async delete(req: Request, res: Response): Promise<void> {
+  static async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const id = req.params.id as string;
       await JobService.deleteJob(id);
       res.status(200).json({ message: "Vaga excluida com sucesso." });
-    } catch (error: any) {
-      if (error.code === "P2025") {
-        res.status(404).json({ error: "Vaga nao encontrada para exclusao." });
-        return;
-      }
-      res.status(500).json({error: "Erro ao processar a exclusao da vaga."})
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getDashboard(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const dashboard = await JobService.getDashboard()
+      res.status(200).json(dashboard)
+    } catch (error) {
+      next(error)
     }
   }
 }

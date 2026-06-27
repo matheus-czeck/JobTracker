@@ -6,15 +6,16 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import { JobService, JobDetail } from '../../services/job.service';
+import { JobDetail } from '../../models/job.model';
+import { JobService } from '../../services/job.service';
 import { CommonModule } from '@angular/common';
 import { TimelineModule } from 'primeng/timeline';
-import { PipesReplaceUnderscorePipe } from '../../pipes.replace-underscore.pipe';
+import { ReplaceUnderscorePipe } from '../../pipes/replace-underscore.pipe';
 
 @Component({
   selector: 'app-job-detail',
   standalone: true,
-  imports: [TimelineModule, CommonModule, PipesReplaceUnderscorePipe],
+  imports: [TimelineModule, CommonModule, ReplaceUnderscorePipe],
   templateUrl: './job-detail.component.html',
   styleUrl: './job-detail.component.css',
 })

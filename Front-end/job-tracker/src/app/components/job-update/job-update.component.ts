@@ -5,6 +5,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { JobService } from '../../services/job.service';
+import { statusOrder } from '../../constants/job-status.constants';
 
 @Component({
   selector: 'app-job-update',
@@ -25,18 +26,7 @@ export class JobUpdateComponent {
 
   newStatus: string = '';
   newNotes: string = '';
-
-  readonly statusOrder = [
-    { label: 'Todos os Status', value: null },
-    { label: 'APLICADO', value: 'APLICADO' },
-    { label: 'TRIAGEM', value: 'TRIAGEM' },
-    { label: 'ENTREVISTA', value: 'ENTREVISTA' },
-    { label: 'TESTE TECNICO', value: 'TESTE_TECNICO' },
-    { label: 'PROPOSTA', value: 'PROPOSTA' },
-    { label: 'PROPOSTA ACEITA', value: 'PROPOSTA_ACEITA' },
-    { label: 'REJEITADO', value: 'REJEITADO' },
-    { label: 'DESISTENCIA', value: 'DESISTENCIA' },
-  ];
+  readonly statusOrder = statusOrder
 
   constructor(private jobService: JobService) {}
 

@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'replaceUnderscore',
   standalone: true
 })
-export class PipesReplaceUnderscorePipe implements PipeTransform {
+export class ReplaceUnderscorePipe implements PipeTransform {
 
   transform(value: string): string {
     if(!value) return '';

@@ -1,0 +1,159 @@
+.dashboard-container {
+  padding: 1rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  font-size: .5rem;
+  color: var(--text-color-secondary);
+  margin: 0;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  background: var(--surface-card);
+  border-radius: 12px;
+  min-width: 200px;
+  max-width: 300px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-left: 2px solid transparent;
+
+}
+
+
+
+.card-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.card-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-color);
+}
+
+.card-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Cores por status */
+.total {
+  border-left-color: #6366f1;
+}
+.total .card-icon {
+  background: #eef2ff;
+  color: #6366f1;
+}
+
+.aplicado {
+  border-left-color: #3b82f6;
+}
+.aplicado .card-icon {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.triagem {
+  border-left-color: #f59e0b;
+}
+.triagem .card-icon {
+  background: #fffbeb;
+  color: #f59e0b;
+}
+
+.entrevista {
+  border-left-color: #8b5cf6;
+}
+.entrevista .card-icon {
+  background: #f5f3ff;
+  color: #8b5cf6;
+}
+
+.teste {
+  border-left-color: #06b6d4;
+}
+.teste .card-icon {
+  background: #ecfeff;
+  color: #06b6d4;
+}
+
+.proposta {
+  border-left-color: #10b981;
+}
+.proposta .card-icon {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.proposta-aceita {
+  border-left-color: #22c55e;
+}
+.proposta-aceita .card-icon {
+  background: #f0fdf4;
+  color: #22c55e;
+}
+
+.rejeitado {
+  border-left-color: #ef4444;
+}
+.rejeitado .card-icon {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.desistencia {
+  border-left-color: #9ca3af;
+}
+.desistencia .card-icon {
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+/* Loading */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--text-color-secondary);
+}

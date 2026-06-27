@@ -1,36 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Job {
-  id: string;
-  title: string;
-  company: string;
-  url: string;
-  currentStatus: string;
-  updateAt: Date;
-
-  location?: string;
-  salaryExpect?: string;
-  description?: string;
-}
-
-export interface JobHistory {
-  id: string;
-  newStatus: string;
-  notes: string;
-  changedAt: Date;
-}
-
-export interface JobDetail extends Job {
-  history: JobHistory[];
-}
+import { Job, JobDetail, CreateJobInput, JobDashboard} from '../models/job.model';
+import { environment } from '../environment/environments';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JobService {
-  private apiUrl = 'http://localhost:3000/jobs';
+  private apiUrl = `${environment.apiUrl}/jobs`;
 
   constructor(private http: HttpClient) {}
 
@@ -40,8 +18,12 @@ export class JobService {
   getJobById(id: string): Observable<JobDetail> {
     return this.http.get<JobDetail>(`${this.apiUrl}/${id}`);
   }
+  
+  getJobDashboard(): Observable<JobDashboard>{
+    return this.http.get<JobDashboard>(`${this.apiUrl}/dashboard`)
+  }
 
-  createJob(job: any): Observable<Job> {
+  createJob(job: CreateJobInput): Observable<Job> {
     return this.http.post<Job>(this.apiUrl, job);
   }
 

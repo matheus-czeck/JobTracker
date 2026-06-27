@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { JobService, Job } from '../../services/job.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Job } from '../../models/job.model';
+import { JobService } from '../../services/job.service';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,7 +13,10 @@ import { JobDetailComponent } from '../job-detail/job-detail.component';
 import { JobUpdateComponent } from '../job-update/job-update.component';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { PipesReplaceUnderscorePipe } from '../../pipes.replace-underscore.pipe';
+import { ReplaceUnderscorePipe } from '../../pipes/replace-underscore.pipe';
+import { statusOrder } from '../../constants/job-status.constants';
+
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 @Component({
   selector: 'app-job-list',
@@ -26,9 +30,10 @@ import { PipesReplaceUnderscorePipe } from '../../pipes.replace-underscore.pipe'
     ConfirmDialogModule,
     JobDetailComponent,
     JobUpdateComponent,
+    DashboardComponent,
     FormsModule,
     DropdownModule,
-    PipesReplaceUnderscorePipe,
+    ReplaceUnderscorePipe,
   ],
   templateUrl: './job-list.component.html',
   styleUrl: './job-list.component.css',
@@ -45,17 +50,9 @@ export class JobListComponent implements OnInit {
   displayUpdateDialog: boolean = false;
   selectedJobId: string | null = null;
 
-  readonly statusOrder = [
-    { label: 'Todos os Status', value: null },
-    { label: 'APLICADO', value: 'APLICADO' },
-    { label: 'TRIAGEM', value: 'TRIAGEM' },
-    { label: 'ENTREVISTA', value: 'ENTREVISTA' },
-    { label: 'TESTE TECNICO', value: 'TESTE_TECNICO' },
-    { label: 'PROPOSTA', value: 'PROPOSTA' },
-    { label: 'PROPOSTA ACEITA', value: 'PROPOSTA_ACEITA' },
-    { label: 'REJEITADO', value: 'REJEITADO' },
-    { label: 'DESISTENCIA', value: 'DESISTENCIA' },
-  ];
+  readonly statusOrder = statusOrder;
+
+  @ViewChild(DashboardComponent) dashboard!: DashboardComponent
 
   constructor(
     private jobService: JobService,
@@ -77,6 +74,7 @@ export class JobListComponent implements OnInit {
       next: (data) => {
         this.jobs = data;
         this.applyFilters();
+        this.dashboard.loadDashboard()
       },
       error: (err) => console.log('Erro ao carregar vagas', err),
     });

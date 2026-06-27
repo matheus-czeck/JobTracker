@@ -1,13 +1,20 @@
 <p-confirmDialog></p-confirmDialog>
 
 <div class="list-container">
-
   <header class="header-container">
     <div class="title-area">
       <h2>Minhas Candidaturas</h2>
-      <p class="subtitle">Gerencie e acompanhe seus processos seletivos em tempo real</p>
+      <p class="subtitle">
+        Gerencie e acompanhe seus processos seletivos em tempo real
+      </p>
     </div>
-    <button pButton (click)="displayDialog = true" label="Nova Vaga" icon="pi pi-plus" class="add-job-btn"></button>
+    <button
+      pButton
+      (click)="displayDialog = true"
+      label="Nova Vaga"
+      icon="pi pi-plus"
+      class="add-job-btn"
+    ></button>
 
     <p-dialog
       header="Cadastrar Nova Vaga"
@@ -20,43 +27,44 @@
     </p-dialog>
   </header>
 
-
   <section class="filter-bar">
     <div class="filter-group text-search">
-      <label for="text">Filtrar:</label>
-      <span class="p-input-icon-left search-wrapper">
-        <input 
-          pInputText 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          (input)="applyFilters()" 
-          placeholder="empresa ou cargo..." />
-      </span>
+      <i class="pi pi-search search-icon"></i>
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="applyFilters()"
+        placeholder="Buscar por empresa ou cargo..."
+      />
     </div>
 
     <div class="filter-group status-search">
-      <p-dropdown 
-        [options]="statusOrder" 
-        [(ngModel)]="selectedStatus" 
-        (onChange)="applyFilters()" 
+      <p-dropdown
+        [options]="statusOrder"
+        [(ngModel)]="selectedStatus"
+        (onChange)="applyFilters()"
         placeholder="Todos os status"
-        styleClass="modern-dropdown">
+        styleClass="modern-dropdown"
+      >
       </p-dropdown>
     </div>
 
     <div class="filter-group action-search">
-      <button 
-        pButton 
-        label="Limpar" 
-        icon="pi pi-filter-slash" 
+      <button
+        pButton
+        label="Limpar"
+        icon="pi pi-filter-slash"
         class="p-button-outlined p-button-secondary clear-btn"
-        (click)="clearFilters()">
-      </button>
+        (click)="clearFilters()"
+      ></button>
     </div>
   </section>
 
+  <app-dashboard></app-dashboard>
+
   <main class="table-card">
-    <p-table [value]="filteredJobs" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-striped-custom">
+    <p-table [value]="filteredJobs" styleClass="p-datatable-striped-custom">
       <ng-template pTemplate="header">
         <tr>
           <th>Empresa</th>
@@ -107,7 +115,6 @@
     </p-table>
   </main>
 
-
   <p-dialog
     header="Detalhes e Histórico"
     [(visible)]="displayDetailDialog"
@@ -115,7 +122,10 @@
     [style]="{ width: '550px' }"
     styleClass="custom-dialog"
   >
-    <app-job-detail *ngIf="displayDetailDialog" [jobId]="selectedJobId"></app-job-detail>
+    <app-job-detail
+      *ngIf="displayDetailDialog"
+      [jobId]="selectedJobId"
+    ></app-job-detail>
   </p-dialog>
 
   <p-dialog
