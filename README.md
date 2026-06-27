@@ -30,7 +30,7 @@ Este projeto resolve isso com uma aplicação funcional para cadastrar vagas, at
 - [x] Atualização de status por candidatura com registro de anotações
 - [x] Histórico completo de mudanças de status por vaga
 - [x] Filtro por texto (empresa ou cargo) e por status
-- [ ] Dashboard com resumo visual das candidaturas por status *(em desenvolvimento)*
+- [x] Dashboard com resumo visual das candidaturas por status 
 
 ---
 
@@ -62,6 +62,10 @@ Este projeto resolve isso com uma aplicação funcional para cadastrar vagas, at
 JobTracker/
 ├── Back-end/
 │   ├── src/
+│   │   ├── __tests__        # testes unitarios
+│   │   ├── dtos             # regras de dados
+│   │   ├── errors           # define erros
+│   │   ├── middleware       # trata  erros
 │   │   ├── controllers/     # Controladores das rotas
 │   │   ├── repositories/    # Acesso ao banco via Prisma
 │   │   ├── routes/          # Definição das rotas da API
@@ -79,9 +83,13 @@ JobTracker/
 └── Front-end/job-tracker/
     ├── src/
     │   └── app/
-    │       ├── components/  # Componentes da aplicação
-    │       ├── services/    # Serviços e chamadas à API
-    │       └── pipes/       # Pipes customizados
+    │       ├── components/   # Componentes da aplicação
+    │       ├── services/     # Serviços e chamadas à API
+    │       ├── models/       # modelos de interface
+    │       ├── environments/ # definicao da rota
+    │       ├── constants/    # constantes 
+    │       └── pipes/        # Pipes customizados
+    |        
     └── package.json
 ```
 
