@@ -1,0 +1,33 @@
+name: CI - JobTracker
+
+on: 
+  push: 
+    branches:
+      - main 
+  pull-request:
+    branches:
+      - main
+
+jobs: 
+  Back-end:
+    name: Back-end
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      
+      - name: Instalar dependencias
+        working-directory: Back-end
+        run: npm install
+
+      - name: Rodar testes
+        working-directory: Back-end
+        run: npm test -- --run
+  
+  
