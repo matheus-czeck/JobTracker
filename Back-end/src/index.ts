@@ -5,7 +5,13 @@ import { defaultError } from "./middleware/error.handler.js";
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:4200" }));
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGINS?.split(",") || [
+      "http://localhost:4200",
+    ],
+  }),
+);
 app.use(express.json());
 app.use("/api", jobRoutes);
 app.use(defaultError);
