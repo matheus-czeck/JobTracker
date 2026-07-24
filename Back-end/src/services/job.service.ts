@@ -26,7 +26,6 @@ class JobService {
           notes: "Candidatura registrada no JobTracker",
         },
       });
-
       return job;
     });
   }
