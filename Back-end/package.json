@@ -8,7 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "npx prisma generate && rimraf dist && tsc",
     "start": "node dist/server.js",
-    "test": "vitest run",
+    "test": "npx prisma generate && vitest run",
     "test:watch": "vitest"
   },
   "repository": {
