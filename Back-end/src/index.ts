@@ -3,7 +3,6 @@ import cors from "cors";
 import jobRoutes from "./modules/job/job.routes.js";
 import AuthRoutes from "./modules/auth/auth.routes.js";
 import { defaultError } from "./shared/middleware/error.handler.js";
-import { tr } from "zod/locales";
 
 const app = express();
 
