@@ -1,0 +1,42 @@
+<div class="login-container">
+  <div class="login-card">
+
+    <h1>JobTracker</h1>
+
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <p-floatLabel>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+        />
+        <label for="email">E-mail</label>
+      </p-floatLabel>
+
+      <p-floatLabel>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true">
+        </p-password>
+
+        <label for="password">Senha</label>
+      </p-floatLabel>
+
+      <button
+        pButton
+        type="submit"
+        label="Entrar"
+        class="w-full">
+      </button>
+
+    </form>
+
+  </div>
+</div>

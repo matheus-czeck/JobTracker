@@ -1,86 +1,69 @@
-<div class="detail-wrapper" *ngIf="job">
-  <section class="info-section">
-    <div class="header-titles">
-      <div class="header-group">
-        <span class="label">Empresa</span>
-        <span class="company-name">{{ job.company }}</span>
-      </div>
+<div class="job-details">
 
-      <div class="header-group">
-        <span class="label">Cargo</span>
-        <h3 class="job-title">{{ job.title }}</h3>
-      </div>
+  <div class="header-group">
+    <span class="label">Cargo</span>
+    <h3 class="job-title">{{ job.title }}</h3>
+  </div>
+
+  <div class="details-grid">
+
+    <div class="detail-item">
+      <span class="label">Empresa</span>
+      <span class="value">
+        {{ job.company }}
+      </span>
     </div>
 
-    <div class="details-grid">
-      <div class="detail-item">
-        <span class="label">Localização</span>
-        <span class="value">
-          <i class="pi pi-map-marker icon-small"></i>
-          {{ job.location || "Não informada" }}
-        </span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Expectativa Salarial</span>
-        <span class="value">
-          <i class="pi pi-money-bill icon-small"></i>
-          {{ job.salaryExpect }}
-          <span *ngIf="!job.salaryExpect" class="value empty-value"
-            >A combinar</span
-          >
-        </span>
-      </div>
-
-      <div class="detail-item full-width">
-        <span class="label">Link da Vaga</span>
-        <a
-          *ngIf="job.url"
-          [href]="job.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="link-value"
-        >
-          Acessar plataforma da vaga
-          <i
-            class="pi pi-external-link"
-            style="font-size: 0.75rem; margin-left: 0.25rem"
-          ></i>
-        </a>
-        <span *ngIf="!job.url" class="value empty-value"
-          >Sem link cadastrado</span
-        >
-      </div>
-
-      <div class="detail-item full-width" *ngIf="job.description">
-        <span class="label">Descrição / Notas Iniciais</span>
-        <p class="description-value">{{ job.description }}</p>
-      </div>
+    <div class="detail-item">
+      <span class="label">Status Atual</span>
+      <span class="value">
+        {{ job.currentStatus | replaceUnderscore }}
+      </span>
     </div>
-  </section>
 
-  <hr class="divider" />
+    <div class="detail-item">
+      <span class="label">Localização</span>
+      <span class="value">
+        {{ job.location || 'Não informada' }}
+      </span>
+    </div>
 
-  <section class="timeline-section">
-    <h4 class="section-title">Linha do Tempo</h4>
+    <div class="detail-item">
+      <span class="label">Pretensão Salarial</span>
+      <span class="value">
+        {{ job.salaryExpect || 'A combinar' }}
+      </span>
+    </div>
 
-    <p-timeline [value]="job.history || job.currentStatus">
-      <ng-template pTemplate="content" let-event>
-        <div class="timeline-content">
-          <span class="event-status">{{
-            event.status | replaceUnderscore
-          }}</span>
-          <small class="event-date">{{
-            event.date | date: "dd/MM/yyyy HH:mm"
-          }}</small>
-          <p class="event-notes" *ngIf="event.notes">{{ event.notes }}</p>
-        </div>
-      </ng-template>
-    </p-timeline>
-  </section>
-</div>
+    <div class="detail-item full-width">
+      <span class="label">Link da Vaga</span>
 
-<div *ngIf="!job" class="loading-state">
-  <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
-  <p>Carregando detalhes...</p>
+      <a
+        *ngIf="job.url"
+        [href]="job.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Acessar vaga
+      </a>
+
+      <span *ngIf="!job.url">
+        Não informado
+      </span>
+
+    </div>
+
+    <div
+      class="detail-item full-width"
+      *ngIf="job.description"
+    >
+      <span class="label">Descrição</span>
+
+      <p>
+        {{ job.description }}
+      </p>
+    </div>
+
+  </div>
+
 </div>

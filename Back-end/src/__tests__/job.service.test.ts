@@ -1,275 +1,179 @@
-
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { JobStatus } from "@prisma/client";
 
-vi.mock("../repositories/database.js", () => {
-  return {
-    default: {
-      $transaction: vi.fn(),
-      jobOpportunity: {
-        findMany: vi.fn(),
-        findUnique: vi.fn(),
-        delete: vi.fn(),
-      },
-    },
-  };
-});
+import JobService from "../modules/job/job.service.js";
+import JobRepository from "../modules/job/job.repository.js";
+import JobMapper from "../modules/job/job.mapper.js";
+import JobEntity from "../modules/job/job.entity.js";
+import { AppError } from "../shared/errors/app.error.js";
 
+vi.mock("../modules/job/job.repository.js", () => ({
+  default: {
+    create: vi.fn(),
+    findAll: vi.fn(),
+    findById: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
 
-import JobService from "../services/job.service.js";
-import prisma from "../repositories/database.js";
-import { AppError } from "../errors/app.error.js";
-
+vi.mock("../modules/job/job.mapper.js", () => ({
+  default: {
+    toResponse: vi.fn(),
+  },
+}));
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
-
-
 describe("JobService.createJob", () => {
-  it("deve criar uma vaga com status APLICADO", async () => {
- 
-    const inputData = {
-      title: "Desenvolvedor Full Stack",
-      company: "Tech Company",
-      url: "https://empresa.com/vaga",
+  it("deve criar uma vaga com sucesso", async () => {
+    const dto = {
+      title: "Backend Developer",
+      company: "OpenAI",
+      url: "https://openai.com/jobs",
       location: "Remoto",
+      salaryExpect: "10000",
+      description: "Node.js",
     };
 
-    const vagaCriada = {
-      id: "uuid-123",
-      ...inputData,
+    const entity = JobEntity.create({
+      id: undefined,
+      userId: "user-id",
+      ...dto,
       currentStatus: JobStatus.APLICADO,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-
-    const mockTransaction = vi.mocked(prisma.$transaction);
-    mockTransaction.mockImplementation(async (fn: any) => {
-      const tx = {
-        jobOpportunity: {
-          create: vi.fn().mockResolvedValue(vagaCriada),
-        },
-        jobHistory: {
-          create: vi.fn().mockResolvedValue({}),
-        },
-      };
-      return fn(tx);
     });
 
-    const resultado = await JobService.createJob(inputData);
+    vi.mocked(JobRepository.create).mockResolvedValue(entity);
+    vi.mocked(JobMapper.toResponse).mockReturnValue(entity as never);
 
-    expect(resultado).toEqual(vagaCriada);
-    expect(resultado.currentStatus).toBe(JobStatus.APLICADO);
+    const result = await JobService.createJob("user-id", dto);
+
+    expect(JobRepository.create).toHaveBeenCalledTimes(1);
+    expect(JobMapper.toResponse).toHaveBeenCalledWith(entity);
+    expect(result).toEqual(entity);
   });
 });
+describe("JobService.findAll", () => {
+  it("deve retornar todas as vagas do usuário", async () => {
+    const entity = JobEntity.create({
+      id: "job-id",
+      userId: "user-id",
+      title: "Backend Developer",
+      company: "OpenAI",
+      url: "https://openai.com/jobs",
+      location: "Remoto",
+      salaryExpect: "10000",
+      description: "Node.js",
+      currentStatus: JobStatus.APLICADO,
+    });
 
+    vi.mocked(JobRepository.findAll).mockResolvedValue([entity]);
+    vi.mocked(JobMapper.toResponse).mockImplementation((job) => job as never);
 
+    const result = await JobService.findAll("user-id");
 
-describe("JobService.getAllJobs", () => {
-  it("deve retornar lista de vagas ordenada por data", async () => {
-
-    const vagasMock = [
-      {
-        id: "uuid-1",
-        title: "Dev Frontend",
-        company: "Empresa A",
-        url: "https://a.com",
-        currentStatus: JobStatus.APLICADO,
-        _count: { history: 1 },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: "uuid-2",
-        title: "Dev Backend",
-        company: "Empresa B",
-        url: "https://b.com",
-        currentStatus: JobStatus.ENTREVISTA,
-        _count: { history: 3 },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ];
-
-    vi.mocked(prisma.jobOpportunity.findMany).mockResolvedValue(vagasMock as any);
-    const resultado = await JobService.getAllJobs();
-
-    expect(resultado).toHaveLength(2);
-    expect(resultado[0]?.company).toBe("Empresa A");
-    expect(prisma.jobOpportunity.findMany).toHaveBeenCalledTimes(1);
-  });
-
-  it("deve retornar lista vazia quando não há vagas", async () => {
-    vi.mocked(prisma.jobOpportunity.findMany).mockResolvedValue([]);
-
-    const resultado = await JobService.getAllJobs();
-
-    expect(resultado).toEqual([]);
+    expect(JobRepository.findAll).toHaveBeenCalledWith("user-id");
+    expect(JobMapper.toResponse).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([entity]);
   });
 });
-
-
-describe("JobService.getJobId", () => {
-  it("deve retornar uma vaga com seu histórico", async () => {
-    // ARRANGE
-    const vagaMock = {
-      id: "uuid-123",
-      title: "Dev Full Stack",
-      company: "Tech Co",
-      url: "https://tech.com",
-      currentStatus: JobStatus.ENTREVISTA,
-      history: [
-        {
-          id: "hist-1",
-          oldStatus: null,
-          newStatus: JobStatus.APLICADO,
-          changedAt: new Date(),
-        },
-        {
-          id: "hist-2",
-          oldStatus: JobStatus.APLICADO,
-          newStatus: JobStatus.ENTREVISTA,
-          changedAt: new Date(),
-        },
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    vi.mocked(prisma.jobOpportunity.findUnique).mockResolvedValue(vagaMock as any);
-
-
-    const resultado = await JobService.getJobId("uuid-123");
-
-
-    expect(resultado).not.toBeNull();
-    expect(resultado?.history).toHaveLength(2);
-    expect(prisma.jobOpportunity.findUnique).toHaveBeenCalledWith({
-      where: { id: "uuid-123" },
-      include: { history: { orderBy: { changedAt: "desc" } } },
-    });
-  });
-
-  it("deve retornar null quando a vaga não existe", async () => {
-    vi.mocked(prisma.jobOpportunity.findUnique).mockResolvedValue(null);
-
-    await expect(JobService.getJobId("id-inexistente")).rejects.toThrow(AppError)
-  });
-});
-
-
-
-describe("JobService.updateJobStatus", () => {
-  it("deve atualizar o status e registrar no histórico", async () => {
-  
-    const vagaAtualizada = {
-      id: "uuid-123",
-      title: "Dev Full Stack",
-      company: "Tech Co",
-      url: "https://tech.com",
-      currentStatus: JobStatus.ENTREVISTA,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    vi.mocked(prisma.$transaction).mockImplementation(async (fn: any) => {
-      const tx = {
-        jobOpportunity: {
-          findUnique: vi.fn().mockResolvedValue({
-            currentStatus: JobStatus.APLICADO,
-          }),
-          update: vi.fn().mockResolvedValue(vagaAtualizada),
-        },
-        jobHistory: {
-          create: vi.fn().mockResolvedValue({}),
-        },
-      };
-      return fn(tx);
+describe("JobService.findById", () => {
+  it("deve retornar uma vaga existente", async () => {
+    const entity = JobEntity.create({
+      id: "job-id",
+      userId: "user-id",
+      title: "Backend Developer",
+      company: "OpenAI",
+      url: "https://openai.com/jobs",
+      location: "Remoto",
+      salaryExpect: "10000",
+      description: "Node.js",
+      currentStatus: JobStatus.APLICADO,
     });
 
-  
-    const resultado = await JobService.updateJobStatus(
-      "uuid-123",
-      JobStatus.ENTREVISTA,
-      "Chamado para entrevista técnica"
-    );
+    vi.mocked(JobRepository.findById).mockResolvedValue(entity);
+    vi.mocked(JobMapper.toResponse).mockReturnValue(entity as never);
 
-  
-    expect(resultado?.currentStatus).toBe(JobStatus.ENTREVISTA);
+    const result = await JobService.findById("user-id", "job-id");
+
+    expect(JobRepository.findById).toHaveBeenCalledWith("user-id", "job-id");
+
+    expect(result).toEqual(entity);
   });
 
-  it("deve lançar erro quando a vaga não existe", async () => {
-
-    vi.mocked(prisma.$transaction).mockImplementation(async (fn: any) => {
-      const tx = {
-        jobOpportunity: {
-          findUnique: vi.fn().mockResolvedValue(null),
-        },
-      };
-      return fn(tx);
-    });
-
+  it("deve lançar AppError quando a vaga não existir", async () => {
+    vi.mocked(JobRepository.findById).mockResolvedValue(null);
 
     await expect(
-      JobService.updateJobStatus("id-inexistente", JobStatus.ENTREVISTA)
-    ).rejects.toThrow("Vaga nao encontrada.");
-  });
-
-  it("não deve atualizar quando o status já é o mesmo", async () => {
-
-    const vagaMesmoStatus = {
-      id: "uuid-123",
-      currentStatus: JobStatus.APLICADO,
-    };
-
-    vi.mocked(prisma.$transaction).mockImplementation(async (fn: any) => {
-      const tx = {
-        jobOpportunity: {
-          findUnique: vi.fn()
-            .mockResolvedValueOnce({ currentStatus: JobStatus.APLICADO })
-            .mockResolvedValueOnce(vagaMesmoStatus),
-        },
-      };
-      return fn(tx);
-    });
-
-
-    const resultado = await JobService.updateJobStatus(
-      "uuid-123",
-      JobStatus.APLICADO
-    );
-
-
-    expect(resultado).toEqual(vagaMesmoStatus);
+      JobService.findById("user-id", "job-id"),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
 
+describe("JobService.updateJob", () => {
+  it("deve atualizar uma vaga com sucesso", async () => {
+    const entity = JobEntity.create({
+      id: "job-id",
+      userId: "user-id",
+      title: "Backend Developer",
+      company: "OpenAI",
+      url: "https://openai.com/jobs",
+      location: "Remoto",
+      salaryExpect: "10000",
+      description: "Node.js",
+      currentStatus: JobStatus.APLICADO,
+    });
 
-describe("JobService.deleteJob", () => {
-  it("deve deletar uma vaga pelo id", async () => {
-
-    const vagaDeletada = {
-      id: "uuid-123",
-      title: "Dev Full Stack",
-      company: "Tech Co",
-      url: "https://tech.com",
-      currentStatus: JobStatus.REJEITADO,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    const dto = {
+      title: "Senior Backend Developer",
+      company: "OpenAI",
+      url: "https://openai.com/jobs",
+      location: "Remoto",
+      salaryExpect: "15000",
+      description: "Node.js + NestJS",
+      currentStatus: JobStatus.ENTREVISTA,
     };
 
-    vi.mocked(prisma.jobOpportunity.delete).mockResolvedValue(vagaDeletada as any);
+    const updatedEntity = JobEntity.create({
+      id: "job-id",
+      userId: "user-id",
+      ...dto,
+    });
 
+    vi.mocked(JobRepository.findById).mockResolvedValue(entity);
+    vi.mocked(JobRepository.update).mockResolvedValue(updatedEntity);
+    vi.mocked(JobMapper.toResponse).mockReturnValue(updatedEntity as never);
 
-    const resultado = await JobService.deleteJob("uuid-123");
+    const result = await JobService.updateJob("user-id", "job-id", dto);
 
+    expect(JobRepository.findById).toHaveBeenCalledWith("user-id", "job-id");
 
-    expect(resultado.id).toBe("uuid-123");
-    expect(prisma.jobOpportunity.delete).toHaveBeenCalledWith({
-      where: { id: "uuid-123" },
+    expect(JobRepository.update).toHaveBeenCalled();
+
+    expect(JobMapper.toResponse).toHaveBeenCalledWith(updatedEntity);
+
+    expect(result).toEqual(updatedEntity);
+  });
+
+  it("deve lançar AppError quando a vaga não existir", async () => {
+    vi.mocked(JobRepository.findById).mockResolvedValue(null);
+
+    await expect(
+      JobService.updateJob("user-id", "job-id", {} as never),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+});
+describe("JobService.deleteJob", () => {
+  describe("JobService.deleteJob", () => {
+    it("deve excluir uma vaga", async () => {
+      vi.mocked(JobRepository.delete).mockResolvedValue(undefined);
+
+      await JobService.deleteJob("user-id", "job-id");
+
+      expect(JobRepository.delete).toHaveBeenCalledWith("user-id", "job-id");
     });
   });
+
 });

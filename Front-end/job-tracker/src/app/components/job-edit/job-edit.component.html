@@ -1,0 +1,57 @@
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
+  <p-floatLabel>
+    <input pInputText id="title" formControlName="title" />
+    <label for="title">Cargo</label>
+  </p-floatLabel>
+
+  <p-floatLabel>
+    <input pInputText id="company" formControlName="company" />
+    <label for="company">Empresa</label>
+  </p-floatLabel>
+
+  <p-floatLabel>
+    <input pInputText id="url" formControlName="url" />
+    <label for="url">Link da vaga</label>
+  </p-floatLabel>
+
+  <p-floatLabel>
+    <input pInputText id="location" formControlName="location" />
+    <label for="location">Localização</label>
+  </p-floatLabel>
+
+  <p-floatLabel>
+    <input pInputText id="salaryExpect" formControlName="salaryExpect" />
+    <label for="salaryExpect">Pretensão Salarial</label>
+  </p-floatLabel>
+
+  <p-floatLabel>
+    <textarea
+      pInputTextarea
+      rows="4"
+      id="description"
+      formControlName="description"
+    >
+    </textarea>
+    <label for="description">Descrição</label>
+  </p-floatLabel>
+
+  <div class="field">
+    <label for="currentStatus">Status</label>
+
+    <p-dropdown
+      id="currentStatus"
+      formControlName="currentStatus"
+      [options]="statusOrder"
+      placeholder="Selecione um status"
+    >
+    </p-dropdown>
+  </div>
+
+  <button
+    pButton
+    type="submit"
+    label="Salvar Alterações"
+    icon="pi pi-check"
+    class="w-full"
+  ></button>
+</form>

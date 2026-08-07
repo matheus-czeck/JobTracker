@@ -26,7 +26,7 @@ export class JobUpdateComponent {
 
   newStatus: string = '';
   newNotes: string = '';
-  readonly statusOrder = statusOrder
+  readonly statusOrder = statusOrder;
 
   constructor(private jobService: JobService) {}
 

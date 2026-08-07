@@ -4,7 +4,7 @@ export interface Job {
   company: string;
   url: string;
   currentStatus: string;
-  updateAt: Date;
+  updateAt: string;
 
   location?: string;
   salaryExpect?: string;
@@ -18,11 +18,7 @@ export interface JobHistory {
   changedAt: Date;
 }
 
-export interface JobDetail extends Job {
-  history: JobHistory[];
-}
-
-export interface CreateJobInput {
+export interface CreateJobRequest {
   title: string
   company: string
   url: string
@@ -31,14 +27,15 @@ export interface CreateJobInput {
   description?: string
 }
 
-export interface JobDashboard {
-  total: number
-   APLICADO: number
-  TRIAGEM: number
-  ENTREVISTA: number
-  TESTE_TECNICO: number
-  PROPOSTA: number
-  PROPOSTA_ACEITA: number
-  REJEITADO: number
-  DESISTENCIA: number
+export interface UpdateJobRequest {
+  title: string;
+  company: string;
+  url: string
+
+  location?: string;
+  salarayExpect?: string;
+  description?: string
+  currentSttatus: string;
+
 }
+

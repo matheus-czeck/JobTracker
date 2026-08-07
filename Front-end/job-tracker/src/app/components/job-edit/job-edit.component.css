@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding-top: .5rem;
+}
+
+:host ::ng-deep .p-float-label {
+  display: block;
+  width: 100%;
+  margin-top: .5rem;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-dropdown,
+:host ::ng-deep .p-inputtextarea {
+  width: 100%;
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-dropdown {
+  height: 44px;
+}
+
+:host ::ng-deep .p-inputtextarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+:host ::ng-deep .p-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  margin-top: .75rem;
+  width: 100%;
+}
+
+:host ::ng-deep .p-button {
+  font-weight: 600;
+  height: 44px;
+}

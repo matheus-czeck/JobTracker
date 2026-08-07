@@ -18,6 +18,18 @@ enum JobStatus {
     DESISTENCIA
   }
 
+  model User{
+  id String @id @default(uuid())
+  name String 
+  email String @unique
+  password String 
+  jobs JobOpportunity[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  
+  }
+
   model JobOpportunity {
     id String @id @default(uuid())
     title String 
@@ -26,9 +38,12 @@ enum JobStatus {
     location String?
     salaryExpect String?
     description String?
+    userId String
     currentStatus JobStatus @default(APLICADO)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     history JobHistory[]
     @@map("job_opportunities") 
