@@ -11,7 +11,6 @@ app.use(
     origin: process.env.ALLOWED_ORIGINS?.split(",") ?? [
       "http://localhost:4200",
     ],
-    credentials: true,
   }),
 );
 app.use(express.json());
