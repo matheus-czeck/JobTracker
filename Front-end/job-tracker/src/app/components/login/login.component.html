@@ -1,42 +1,95 @@
 <div class="login-container">
-  <div class="login-card">
 
-    <h1>JobTracker</h1>
 
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="onSubmit()"
-    >
+  <div class="login-brand">
+    <p class="brand-eyebrow">Job Tracker</p>
 
-      <p-floatLabel>
-        <input
-          pInputText
-          id="email"
-          type="email"
-          formControlName="email"
-        />
-        <label for="email">E-mail</label>
-      </p-floatLabel>
+    <h1 class="brand-title">
+      Sua jornada<br>
+      de <span>carreira</span>,<br>
+      organizada.
+    </h1>
 
-      <p-floatLabel>
-        <p-password
-          id="password"
-          formControlName="password"
-          [feedback]="false"
-          [toggleMask]="true">
-        </p-password>
+    <p class="brand-desc">
+      Registre candidaturas, acompanhe cada etapa e nunca perca
+      o fio da sua busca pelo emprego ideal.
+    </p>
 
-        <label for="password">Senha</label>
-      </p-floatLabel>
 
-      <button
-        pButton
-        type="submit"
-        label="Entrar"
-        class="w-full">
-      </button>
-
-    </form>
-
+    <div class="brand-progress">
+      <div class="progress-item">
+        <span class="progress-label">Aplicado</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="progress-item">
+        <span class="progress-label">Triagem</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="progress-item">
+        <span class="progress-label">Entrevista</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="progress-item">
+        <span class="progress-label">Teste Técnico</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="progress-item">
+        <span class="progress-label">Proposta</span>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
   </div>
+
+
+  <div class="login-card">
+    <div class="card-inner">
+       <p class="brand-eyebrow mobile-only">Job Tracker</p>
+
+      <h2 class="card-title">Entrar na conta</h2>
+      <p class="card-subtitle">Acesse para gerenciar suas candidaturas.</p>
+
+      <form
+        class="login-form"
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+      >
+
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input
+            pInputText
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="voce@email.com"
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <p-password
+            id="password"
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            placeholder="••••••••"
+          ></p-password>
+        </div>
+
+        <button
+          pButton
+          type="submit"
+          label="Entrar →"
+          class="btn-submit"
+        ></button>
+
+      </form>
+
+      <p class="card-footer">
+        Ainda não tem conta? <a routerLink="/register">Criar conta</a>
+      </p>
+
+    </div>
+  </div>
+
 </div>
